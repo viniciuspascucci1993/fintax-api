@@ -10,8 +10,10 @@ import com.fintaxlabs.fintax.domain.service.TaxCalculator;
 import com.fintaxlabs.fintax.application.service.TaxCalculator2026;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
+@Profile({"local"})
 public class BeanConfig {
 
     @Bean

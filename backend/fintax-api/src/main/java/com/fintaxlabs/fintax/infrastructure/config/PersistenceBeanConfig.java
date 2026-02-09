@@ -6,8 +6,10 @@ import com.fintaxlabs.fintax.adapter.output.persistence.repository.JpaTaxDeclara
 import com.fintaxlabs.fintax.application.port.output.TaxDeclarationRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
+@Profile("prod")
 public class PersistenceBeanConfig {
 
     @Bean
@@ -22,4 +24,5 @@ public class PersistenceBeanConfig {
     ) {
         return new TaxDeclarationRepositoryAdapter(jpaRepository, mapper);
     }
+
 }

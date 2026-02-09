@@ -6,6 +6,8 @@ import com.fintaxlabs.fintax.domain.model.TaxDeclaration;
 import com.fintaxlabs.fintax.domain.model.TaxResult;
 import com.fintaxlabs.fintax.domain.service.TaxCalculator;
 
+import java.util.UUID;
+
 public class SimulateTaxUseCase {
 
     private final TaxCalculator taxCalculator;
@@ -22,6 +24,15 @@ public class SimulateTaxUseCase {
     }
 
     public TaxResult execute(TaxDeclaration taxDeclaration) {
+
+        if (taxDeclaration.getId() == null) {
+            taxDeclaration.setId(UUID.randomUUID());
+        }
+
+        if (taxDeclaration.getTaxPayer().getId() == null) {
+            taxDeclaration.getTaxPayer().setId(UUID.randomUUID());
+        }
+
         TaxResult result = taxCalculator.calculate(taxDeclaration);
 
         taxDeclarationRepository.save(taxDeclaration);

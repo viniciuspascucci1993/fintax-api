@@ -16,7 +16,7 @@ public class TaxSimulationMapper {
     public static TaxDeclaration toDomain(SimulateTaxRequestDTO simulateTaxRequestDTO) {
 
         Taxpayer taxpayer = new Taxpayer(
-                UUID.randomUUID(),
+                null,
                 simulateTaxRequestDTO.getTaxpayer().getFullName(),
                 simulateTaxRequestDTO.getTaxpayer().getTaxId(),
                 simulateTaxRequestDTO.getTaxpayer().getBirthDate(),
@@ -32,7 +32,7 @@ public class TaxSimulationMapper {
                 .toList();
 
         return new TaxDeclaration(
-                UUID.randomUUID(),
+                null,
                 simulateTaxRequestDTO.getFiscalYear(),
                 taxpayer,
                 incomes,

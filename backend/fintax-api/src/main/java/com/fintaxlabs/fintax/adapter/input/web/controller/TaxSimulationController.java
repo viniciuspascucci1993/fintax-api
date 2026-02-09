@@ -25,6 +25,7 @@ public class TaxSimulationController {
         this.findByIdUseCase = findByIdUseCase;
     }
 
+    @PostMapping("/simulate")
     public ResponseEntity<TaxResultResponseDTO> simulate(
             @RequestBody SimulateTaxRequestDTO request
     ) {

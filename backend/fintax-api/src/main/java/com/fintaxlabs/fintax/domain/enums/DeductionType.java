@@ -1,8 +1,9 @@
 package com.fintaxlabs.fintax.domain.enums;
 
 public enum DeductionType {
-
-    DEPENDENT,
-    MEDICAL,
-    EDUCATION
+    HEALTHCARE,
+    EDUCATION,
+    DEPENDENTS,
+    PENSION,
+    MEDICAL
 }
