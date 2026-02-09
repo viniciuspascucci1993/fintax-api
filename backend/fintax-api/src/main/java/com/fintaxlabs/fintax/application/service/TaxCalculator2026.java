@@ -1,15 +1,15 @@
-package com.fintaxlabs.fintax.domain.service.impl;
+package com.fintaxlabs.fintax.application.service;
 
 import com.fintaxlabs.fintax.domain.exception.DomainException;
 import com.fintaxlabs.fintax.domain.model.Deduction;
 import com.fintaxlabs.fintax.domain.model.Income;
 import com.fintaxlabs.fintax.domain.model.TaxDeclaration;
 import com.fintaxlabs.fintax.domain.model.TaxResult;
-import com.fintaxlabs.fintax.domain.service.TaxCalculatorService;
+import com.fintaxlabs.fintax.domain.service.TaxCalculator;
 
 import java.math.BigDecimal;
 
-public class TaxCalculatorServiceImpl implements TaxCalculatorService {
+public class TaxCalculator2026 implements TaxCalculator {
     @Override
     public TaxResult calculate(TaxDeclaration declaration) {
 
