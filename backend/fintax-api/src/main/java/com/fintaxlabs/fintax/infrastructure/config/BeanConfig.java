@@ -4,6 +4,7 @@ import com.fintaxlabs.fintax.adapter.output.persistence.InMemoryTaxDeclarationRe
 import com.fintaxlabs.fintax.adapter.output.persistence.InMemoryTaxResultRepository;
 import com.fintaxlabs.fintax.application.port.output.TaxDeclarationRepository;
 import com.fintaxlabs.fintax.application.port.output.TaxResultRepository;
+import com.fintaxlabs.fintax.application.usecase.FindTaxDeclarationByIdUseCase;
 import com.fintaxlabs.fintax.application.usecase.SimulateTaxUseCase;
 import com.fintaxlabs.fintax.domain.service.TaxCalculator;
 import com.fintaxlabs.fintax.application.service.TaxCalculator2026;
@@ -33,5 +34,12 @@ public class BeanConfig {
                          TaxDeclarationRepository taxDeclarationRepository,
                                                  TaxResultRepository taxResultRepository) {
         return new SimulateTaxUseCase(taxCalculator, taxDeclarationRepository, taxResultRepository);
+    }
+
+    @Bean
+    public FindTaxDeclarationByIdUseCase findTaxDeclarationByIdUseCase(
+            TaxDeclarationRepository repository
+    ) {
+        return new FindTaxDeclarationByIdUseCase(repository);
     }
 }
