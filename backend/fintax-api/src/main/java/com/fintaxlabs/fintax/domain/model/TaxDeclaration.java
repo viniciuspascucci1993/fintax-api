@@ -3,25 +3,38 @@ package com.fintaxlabs.fintax.domain.model;
 import com.fintaxlabs.fintax.domain.enums.TaxRegime;
 
 import java.util.List;
+import java.util.UUID;
 
 public class TaxDeclaration {
 
+    private UUID id;
     private Integer fiscalYear;
     private Taxpayer taxPayer;
     private List<Income> incomes;
     private List<Deduction> deductions;
     private TaxRegime regime;
 
-    public TaxDeclaration(Integer fiscalYear,
+    public TaxDeclaration(
+            UUID id,
+            Integer fiscalYear,
                           Taxpayer taxPayer,
                           List<Income> incomes,
                           List<Deduction> deductions,
                           TaxRegime regime) {
+        this.id = UUID.randomUUID();
         this.fiscalYear = fiscalYear;
         this.taxPayer = taxPayer;
         this.incomes = incomes;
         this.deductions = deductions;
         this.regime = regime;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public Integer getFiscalYear() {

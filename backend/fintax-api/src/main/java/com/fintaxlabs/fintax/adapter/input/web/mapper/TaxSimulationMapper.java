@@ -32,6 +32,7 @@ public class TaxSimulationMapper {
                 .toList();
 
         return new TaxDeclaration(
+                UUID.randomUUID(),
                 simulateTaxRequestDTO.getFiscalYear(),
                 taxpayer,
                 incomes,

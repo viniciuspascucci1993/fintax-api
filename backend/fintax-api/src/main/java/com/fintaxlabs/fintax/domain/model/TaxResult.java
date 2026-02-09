@@ -3,8 +3,11 @@ package com.fintaxlabs.fintax.domain.model;
 import com.fintaxlabs.fintax.domain.enums.TaxRegime;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class TaxResult {
+
+    private UUID id;
     private TaxRegime taxRegime;
     private BigDecimal grossIncome;
     private BigDecimal totalDeductions;
@@ -12,18 +15,29 @@ public class TaxResult {
     private BigDecimal taxDue;
     private BigDecimal refund;
 
-    public TaxResult(TaxRegime taxRegime,
-                     BigDecimal grossIncome,
-                     BigDecimal totalDeductions,
-                     BigDecimal taxableBase,
-                     BigDecimal taxDue,
-                     BigDecimal refund) {
+    public TaxResult(
+            UUID id,
+            TaxRegime taxRegime,
+            BigDecimal grossIncome,
+            BigDecimal totalDeductions,
+            BigDecimal taxableBase,
+            BigDecimal taxDue,
+            BigDecimal refund) {
+        this.id = UUID.randomUUID();
         this.taxRegime = taxRegime;
         this.grossIncome = grossIncome;
         this.totalDeductions = totalDeductions;
         this.taxableBase = taxableBase;
         this.taxDue = taxDue;
         this.refund = refund;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public TaxRegime getTaxRegime() {

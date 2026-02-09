@@ -5,6 +5,8 @@ import com.fintaxlabs.fintax.domain.model.TaxDeclaration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class InMemoryTaxDeclarationRepository implements TaxDeclarationRepository {
 
@@ -13,5 +15,12 @@ public class InMemoryTaxDeclarationRepository implements TaxDeclarationRepositor
     @Override
     public void save(TaxDeclaration taxDeclaration) {
         storage.add(taxDeclaration);
+    }
+
+    @Override
+    public Optional<TaxDeclaration> findById(UUID id) {
+        return storage.stream()
+                .filter(result -> id.equals(result.getId()))
+                .findFirst();
     }
 }

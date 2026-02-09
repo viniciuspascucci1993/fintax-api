@@ -1,8 +1,6 @@
 package com.fintaxlabs.fintax.adapter.output.persistence.entiity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -12,6 +10,8 @@ import java.util.UUID;
 public class TaxpayerEntity {
 
     @Id
+    @GeneratedValue
+    @Column(columnDefinition = "uuid")
     private UUID id;
 
     private String fullName;

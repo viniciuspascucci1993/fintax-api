@@ -8,6 +8,7 @@ import com.fintaxlabs.fintax.domain.model.TaxResult;
 import com.fintaxlabs.fintax.domain.service.TaxCalculator;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class TaxCalculator2026 implements TaxCalculator {
     @Override
@@ -39,7 +40,9 @@ public class TaxCalculator2026 implements TaxCalculator {
         // Cálculo ficticio ( por enquanto )
         BigDecimal taxDue = taxableBase.multiply(new BigDecimal("0.15"));
 
-        return new TaxResult(declaration.getRegime(),
+        return new TaxResult(
+                UUID.randomUUID(),
+                declaration.getRegime(),
                 grossIncome, totalDeductions,
                 taxableBase, taxDue,
                 BigDecimal.ZERO);

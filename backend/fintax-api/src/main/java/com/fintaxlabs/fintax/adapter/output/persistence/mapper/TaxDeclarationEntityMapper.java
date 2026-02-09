@@ -42,6 +42,7 @@ public class TaxDeclarationEntityMapper {
 
     public TaxDeclaration toDomain(TaxDeclarationEntity entity) {
         return new TaxDeclaration(
+                entity.getId(),
                 entity.getFiscalYear(),
                 toTaxpayerDomain(entity.getTaxpayer()),
                 entity.getIncomes()
