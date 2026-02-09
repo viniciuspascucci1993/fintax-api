@@ -1,4 +1,4 @@
-package com.fintaxlabs.fintax.adapter;
+package com.fintaxlabs.fintax.adapter.output.persistence;
 
 import com.fintaxlabs.fintax.adapter.output.persistence.entiity.TaxDeclarationEntity;
 import com.fintaxlabs.fintax.adapter.output.persistence.mapper.TaxDeclarationEntityMapper;

@@ -19,6 +19,7 @@ public class TaxDeclarationEntityMapper {
     public TaxDeclarationEntity toEntity(TaxDeclaration domain) {
 
         TaxDeclarationEntity entity = new TaxDeclarationEntity();
+        entity.setId(domain.getId());
         entity.setFiscalYear(domain.getFiscalYear());
         entity.setRegime(domain.getRegime());
 
@@ -64,7 +65,6 @@ public class TaxDeclarationEntityMapper {
     private TaxpayerEntity toTaxpayerEntity(Taxpayer domain) {
 
         TaxpayerEntity entity = new TaxpayerEntity();
-        entity.setId(domain.getId());
         entity.setFullName(domain.getFullName());
         entity.setTaxId(domain.getTaxId());
         entity.setBirthDate(domain.getBirthDate());
@@ -92,7 +92,7 @@ public class TaxDeclarationEntityMapper {
 
         IncomeEmbeddable embeddable = new IncomeEmbeddable();
         embeddable.setAmount(domain.getAmount());
-        embeddable.setType(domain.getTypeIncome().name());
+        embeddable.setType(domain.getTypeIncome());
 
         return embeddable;
     }
@@ -100,7 +100,7 @@ public class TaxDeclarationEntityMapper {
     private Income toIncomeDomain(IncomeEmbeddable embeddable) {
         return new Income(
                 embeddable.getAmount(),
-                IncomeType.valueOf(embeddable.getType())
+                IncomeType.valueOf(embeddable.getType().name())
         );
     }
 
@@ -112,7 +112,7 @@ public class TaxDeclarationEntityMapper {
 
         DeductionEmbeddable embeddable = new DeductionEmbeddable();
         embeddable.setAmount(domain.getAmount());
-        embeddable.setType(domain.getTypeDeduction().name());
+        embeddable.setType(domain.getTypeDeduction());
 
         return embeddable;
     }
@@ -121,7 +121,7 @@ public class TaxDeclarationEntityMapper {
         DeductionType type;
 
         try {
-            type = DeductionType.valueOf(embeddable.getType());
+            type = DeductionType.valueOf(embeddable.getType().name());
         } catch (IllegalArgumentException ex) {
             throw new DomainException(
                     "Invalid deduction type persisted: " + embeddable.getType()

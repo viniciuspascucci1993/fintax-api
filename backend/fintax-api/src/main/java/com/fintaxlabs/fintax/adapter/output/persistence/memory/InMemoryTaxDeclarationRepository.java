@@ -1,4 +1,4 @@
-package com.fintaxlabs.fintax.adapter.output.persistence;
+package com.fintaxlabs.fintax.adapter.output.persistence.memory;
 
 import com.fintaxlabs.fintax.application.port.output.TaxDeclarationRepository;
 import com.fintaxlabs.fintax.domain.model.TaxDeclaration;

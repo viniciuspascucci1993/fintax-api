@@ -1,6 +1,9 @@
 package com.fintaxlabs.fintax.adapter.output.persistence.entiity;
 
+import com.fintaxlabs.fintax.domain.enums.DeductionType;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 import java.math.BigDecimal;
 
@@ -8,12 +11,14 @@ import java.math.BigDecimal;
 public class DeductionEmbeddable {
 
     private BigDecimal amount;
-    private String type;
+
+    @Enumerated(EnumType.STRING)
+    private DeductionType type;
 
     public DeductionEmbeddable() {
     }
 
-    public DeductionEmbeddable(BigDecimal amount, String type) {
+    public DeductionEmbeddable(BigDecimal amount, DeductionType type) {
         this.amount = amount;
         this.type = type;
     }
@@ -26,11 +31,11 @@ public class DeductionEmbeddable {
         this.amount = amount;
     }
 
-    public String getType() {
+    public DeductionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(DeductionType type) {
         this.type = type;
     }
 }

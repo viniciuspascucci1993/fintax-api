@@ -21,7 +21,7 @@ public class TaxDeclaration {
                           List<Income> incomes,
                           List<Deduction> deductions,
                           TaxRegime regime) {
-        this.id = id;
+        this.id = id != null ? id : UUID.randomUUID();
         this.fiscalYear = fiscalYear;
         this.taxPayer = taxPayer;
         this.incomes = incomes;

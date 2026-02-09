@@ -11,7 +11,6 @@ import java.util.UUID;
 public class TaxDeclarationEntity {
 
     @Id
-    @GeneratedValue
     @Column(columnDefinition = "uuid")
     private UUID id;
 
@@ -20,22 +19,33 @@ public class TaxDeclarationEntity {
     @Enumerated(EnumType.STRING)
     private TaxRegime regime;
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = { CascadeType.PERSIST, CascadeType.MERGE }
+    )
+    @JoinColumn(name = "taxpayer_id", nullable = false)
     private TaxpayerEntity taxpayer;
 
     @ElementCollection
+    @CollectionTable(
+            name = "tax_declaration_incomes",
+            joinColumns = @JoinColumn(name = "tax_declaration_id")
+    )
     private List<IncomeEmbeddable> incomes;
 
     @ElementCollection
+    @CollectionTable(
+            name = "tax_declaration_deductions",
+            joinColumns = @JoinColumn(name = "tax_declaration_id")
+    )
     private List<DeductionEmbeddable> deductions;
 
     public TaxDeclarationEntity() { }
 
-    public TaxDeclarationEntity(UUID id, Integer fiscalYear,
+    public TaxDeclarationEntity(Integer fiscalYear,
                                 TaxRegime regime, TaxpayerEntity taxpayer,
                                 List<IncomeEmbeddable> incomes,
                                 List<DeductionEmbeddable> deductions) {
-        this.id = id;
         this.fiscalYear = fiscalYear;
         this.regime = regime;
         this.taxpayer = taxpayer;

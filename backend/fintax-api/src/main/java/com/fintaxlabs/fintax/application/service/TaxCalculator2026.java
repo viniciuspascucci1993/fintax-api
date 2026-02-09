@@ -41,7 +41,7 @@ public class TaxCalculator2026 implements TaxCalculator {
         BigDecimal taxDue = taxableBase.multiply(new BigDecimal("0.15"));
 
         return new TaxResult(
-                UUID.randomUUID(),
+                declaration.getId(),
                 declaration.getRegime(),
                 grossIncome, totalDeductions,
                 taxableBase, taxDue,

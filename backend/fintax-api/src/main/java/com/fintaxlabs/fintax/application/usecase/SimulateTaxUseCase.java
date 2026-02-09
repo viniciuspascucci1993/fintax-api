@@ -12,7 +12,6 @@ public class SimulateTaxUseCase {
 
     private final TaxCalculator taxCalculator;
     private final TaxDeclarationRepository taxDeclarationRepository;
-
     private final TaxResultRepository resultRepository;
 
     public SimulateTaxUseCase(TaxCalculator taxCalculator,

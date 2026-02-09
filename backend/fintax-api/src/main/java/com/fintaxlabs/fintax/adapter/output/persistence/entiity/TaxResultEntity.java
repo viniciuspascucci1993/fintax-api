@@ -1,28 +1,33 @@
-package com.fintaxlabs.fintax.domain.model;
+package com.fintaxlabs.fintax.adapter.output.persistence.entiity;
 
 import com.fintaxlabs.fintax.domain.enums.TaxRegime;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class TaxResult {
+@Entity
+@Table(name = "tax_result")
+public class TaxResultEntity {
 
+    @Id
     private UUID taxDeclarationId;
+
+    @Enumerated(EnumType.STRING)
     private TaxRegime taxRegime;
+
     private BigDecimal grossIncome;
     private BigDecimal totalDeductions;
     private BigDecimal taxableBase;
     private BigDecimal taxDue;
     private BigDecimal refund;
 
-    public TaxResult(
-            UUID taxDeclarationId,
-            TaxRegime taxRegime,
-            BigDecimal grossIncome,
-            BigDecimal totalDeductions,
-            BigDecimal taxableBase,
-            BigDecimal taxDue,
-            BigDecimal refund) {
+    public TaxResultEntity() { }
+
+    public TaxResultEntity(UUID taxDeclarationId, TaxRegime taxRegime,
+                           BigDecimal grossIncome, BigDecimal totalDeductions,
+                           BigDecimal taxableBase, BigDecimal taxDue,
+                           BigDecimal refund) {
         this.taxDeclarationId = taxDeclarationId;
         this.taxRegime = taxRegime;
         this.grossIncome = grossIncome;

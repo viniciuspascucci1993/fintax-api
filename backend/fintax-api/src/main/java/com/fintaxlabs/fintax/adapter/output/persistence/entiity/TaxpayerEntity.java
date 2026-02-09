@@ -10,8 +10,8 @@ import java.util.UUID;
 public class TaxpayerEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "uuid")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     private String fullName;

@@ -1,4 +1,4 @@
-package com.fintaxlabs.fintax.adapter.output.persistence;
+package com.fintaxlabs.fintax.adapter.output.persistence.memory;
 
 import com.fintaxlabs.fintax.application.port.output.TaxResultRepository;
 import com.fintaxlabs.fintax.domain.model.TaxDeclaration;
@@ -21,7 +21,7 @@ public class InMemoryTaxResultRepository implements TaxResultRepository {
     @Override
     public Optional<TaxResult> findById(UUID id) {
         return storage.stream()
-                .filter(result -> id.equals(result.getId()))
+                .filter(result -> id.equals(result.getTaxDeclarationId()))
                 .findFirst();
     }
 }

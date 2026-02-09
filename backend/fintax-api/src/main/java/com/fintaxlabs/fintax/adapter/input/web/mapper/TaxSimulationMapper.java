@@ -46,6 +46,7 @@ public class TaxSimulationMapper {
 
         TaxResultResponseDTO taxResultResponseDTO = new TaxResultResponseDTO();
 
+        taxResultResponseDTO.setTaxDeclarationId(taxResult.getTaxDeclarationId());
         taxResultResponseDTO.setRegime(taxResult.getTaxRegime().name());
         taxResultResponseDTO.setGrossIncome(taxResult.getGrossIncome());
         taxResultResponseDTO.setTotalDeductions(taxResult.getTotalDeductions());
