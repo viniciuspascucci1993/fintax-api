@@ -11,6 +11,7 @@ import com.fintaxlabs.fintax.application.usecase.FindTaxDeclarationByIdUseCase;
 import com.fintaxlabs.fintax.application.usecase.SimulateTaxUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class ApplicationBeanConfig {

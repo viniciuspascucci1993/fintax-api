@@ -1,13 +1,14 @@
 package com.fintaxlabs.fintax.adapter.input.web.mapper;
 
 import com.fintaxlabs.fintax.adapter.input.web.dto.response.TaxComparisonResponseDTO;
-import com.fintaxlabs.fintax.adapter.input.web.dto.response.TaxResultResponseDTO;
 import com.fintaxlabs.fintax.adapter.input.web.dto.response.TaxResultWithDisclaimerDTO;
 import com.fintaxlabs.fintax.application.service.TaxDisclaimerService;
 import com.fintaxlabs.fintax.domain.enums.TaxRegime;
 import com.fintaxlabs.fintax.domain.model.TaxComparisonResult;
 import com.fintaxlabs.fintax.domain.model.TaxResult;
+import com.fintaxlabs.fintax.shared.util.MoneyUtils;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,10 +36,10 @@ public class TaxComparisonMapper {
             TaxResultWithDisclaimerDTO dto = new TaxResultWithDisclaimerDTO();
             dto.setTaxDeclarationId(result.getTaxDeclarationId());
             dto.setRegime(regime.name());
-            dto.setGrossIncome(result.getGrossIncome());
-            dto.setTotalDeductions(result.getTotalDeductions());
-            dto.setTaxableBase(result.getTaxableBase());
-            dto.setTaxDue(result.getTaxDue());
+            dto.setGrossIncome(MoneyUtils.scale(result.getGrossIncome()));
+            dto.setTotalDeductions(MoneyUtils.scale(result.getTotalDeductions()));
+            dto.setTaxableBase(MoneyUtils.scale(result.getTaxableBase()));
+            dto.setTaxDue(MoneyUtils.scale(result.getTaxDue()));
             dto.setRefund(result.getRefund());
             dto.setDisclaimer(disclaimerService.forRegime(regime));
 
