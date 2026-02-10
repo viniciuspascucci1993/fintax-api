@@ -8,7 +8,6 @@ import com.fintaxlabs.fintax.domain.model.TaxComparisonResult;
 import com.fintaxlabs.fintax.domain.model.TaxResult;
 import com.fintaxlabs.fintax.shared.util.MoneyUtils;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
