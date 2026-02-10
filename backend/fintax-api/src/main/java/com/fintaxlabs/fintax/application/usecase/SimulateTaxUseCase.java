@@ -2,6 +2,7 @@ package com.fintaxlabs.fintax.application.usecase;
 
 import com.fintaxlabs.fintax.application.port.output.TaxDeclarationRepository;
 import com.fintaxlabs.fintax.application.port.output.TaxResultRepository;
+import com.fintaxlabs.fintax.application.resolver.TaxCalculatorFactory;
 import com.fintaxlabs.fintax.domain.model.TaxDeclaration;
 import com.fintaxlabs.fintax.domain.model.TaxResult;
 import com.fintaxlabs.fintax.domain.service.TaxCalculator;
@@ -10,14 +11,14 @@ import java.util.UUID;
 
 public class SimulateTaxUseCase {
 
-    private final TaxCalculator taxCalculator;
+    private final TaxCalculatorFactory factory;
     private final TaxDeclarationRepository taxDeclarationRepository;
     private final TaxResultRepository resultRepository;
 
-    public SimulateTaxUseCase(TaxCalculator taxCalculator,
+    public SimulateTaxUseCase(TaxCalculatorFactory factory,
                               TaxDeclarationRepository taxDeclarationRepository,
                               TaxResultRepository resultRepository) {
-        this.taxCalculator = taxCalculator;
+        this.factory = factory;
         this.taxDeclarationRepository = taxDeclarationRepository;
         this.resultRepository = resultRepository;
     }
@@ -32,7 +33,10 @@ public class SimulateTaxUseCase {
             taxDeclaration.getTaxPayer().setId(UUID.randomUUID());
         }
 
-        TaxResult result = taxCalculator.calculate(taxDeclaration);
+        TaxCalculator calculator =
+                factory.resolve(taxDeclaration.getRegime());
+
+        TaxResult result = calculator.calculate(taxDeclaration);
 
         taxDeclarationRepository.save(taxDeclaration);
         resultRepository.save(result);
