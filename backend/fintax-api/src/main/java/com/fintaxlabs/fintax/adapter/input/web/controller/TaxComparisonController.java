@@ -1,5 +1,6 @@
 package com.fintaxlabs.fintax.adapter.input.web.controller;
 
+import com.fintaxlabs.fintax.adapter.input.web.dto.request.CompareTaxRequestDTO;
 import com.fintaxlabs.fintax.adapter.input.web.dto.request.SimulateTaxRequestDTO;
 import com.fintaxlabs.fintax.adapter.input.web.dto.response.TaxComparisonResponseDTO;
 import com.fintaxlabs.fintax.adapter.input.web.mapper.TaxComparisonMapper;
@@ -29,18 +30,13 @@ public class TaxComparisonController {
 
     @PostMapping("/compare")
     public ResponseEntity<TaxComparisonResponseDTO> compare(
-            @RequestBody SimulateTaxRequestDTO request
+            @RequestBody CompareTaxRequestDTO request
     ) {
-        TaxDeclaration declaration = TaxSimulationMapper.toDomain(request);
+        TaxDeclaration declaration = TaxSimulationMapper.toDomainForComparison(request);
 
-        TaxComparisonResult result =
-                compareTaxRegimesUseCase.execute(declaration);
-
-        String disclaimer =
-                taxDisclaimerService.generate(result);
-
+        TaxComparisonResult result = compareTaxRegimesUseCase.execute(declaration);
         return ResponseEntity.ok(
-                TaxComparisonMapper.toResponse(result, disclaimer)
+                TaxComparisonMapper.toResponse(result, taxDisclaimerService)
         );
     }
 }

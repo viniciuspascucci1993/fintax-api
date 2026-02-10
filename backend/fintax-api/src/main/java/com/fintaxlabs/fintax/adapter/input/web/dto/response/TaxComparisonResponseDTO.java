@@ -14,6 +14,6 @@ public class TaxComparisonResponseDTO {
 
     private String bestRegime;
     private BigDecimal economy;
-    private String disclaimer;
-    private Map<String, TaxResultResponseDTO> results;
+    private String comparisonSummary;
+    private Map<String, TaxResultWithDisclaimerDTO> results;
 }

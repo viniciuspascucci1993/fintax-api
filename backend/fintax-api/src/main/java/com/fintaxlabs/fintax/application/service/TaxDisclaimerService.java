@@ -1,22 +1,24 @@
 package com.fintaxlabs.fintax.application.service;
 
 import com.fintaxlabs.fintax.domain.enums.TaxRegime;
-import com.fintaxlabs.fintax.domain.model.TaxComparisonResult;
 
 public class TaxDisclaimerService {
 
-    public String generate(TaxComparisonResult result) {
+    public String forRegime(TaxRegime regime) {
+        return switch (regime) {
+            case SIMPLIFIED ->
+                    "The simplified regime applies a standard deduction rate and may be advantageous when itemized deductions are low.";
+            case COMPLETE ->
+                    "The complete regime allows full deduction of eligible expenses and may be beneficial when deductible amounts are high.";
+        };
+    }
 
-        if (result.getEconomy().signum() == 0) {
-            return "Both tax regimes result in the same tax amount. The simplified regime may be chosen for convenience.";
-        }
-
-        if (result.getBestRegime() == TaxRegime.SIMPLIFIED) {
-            return "The simplified regime appears to be more advantageous based on the provided data. However, " +
-                    " individual deductions and future income variations may affect this outcome.";
-        }
-
-        return "The complete regime appears to be more advantageous due to higher deductible expenses. " +
-                " It is recommended to review deductible documentation carefully.";
+    public String comparisonSummary(TaxRegime bestRegime) {
+        return switch (bestRegime) {
+            case SIMPLIFIED ->
+                    "Based on the provided data, the simplified regime results in lower tax liability. This comparison does not account for future income changes or additional deductions.";
+            case COMPLETE ->
+                    "Based on the provided data, the complete regime results in lower tax liability. This comparison does not account for future income changes or additional deductions.";
+        };
     }
 }
