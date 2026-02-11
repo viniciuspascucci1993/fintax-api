@@ -22,15 +22,36 @@ public class TaxTable2026SimplifiedService implements TaxTable {
 
     @Override
     public BigDecimal calculate(BigDecimal taxableBase) {
-        TaxBracket bracket = brackets.stream()
-                .filter(b -> b.matches(taxableBase))
-                .findFirst()
-                .orElseThrow(() ->
-                        new IllegalStateException("No tax bracket found for base: " + taxableBase)
-                );
 
-        return taxableBase
-                .multiply(bracket.getRate())
-                .setScale(2, RoundingMode.HALF_UP);
+        // Progressivo real, precisamos:
+        //Percorrer TODAS as faixas
+        //Calcular a parcela tributável de cada faixa
+        //Somar tudo
+
+        BigDecimal tax = BigDecimal.ZERO;
+
+        for (TaxBracket taxBracket : brackets) {
+            BigDecimal min = taxBracket.getMin();
+            BigDecimal max = taxBracket.getMax();
+            BigDecimal rate = taxBracket.getRate();
+
+            if (taxableBase.compareTo(min) > 0) {
+
+                BigDecimal upperLimit =
+                        (max == null || taxableBase.compareTo(max) < 0)
+                        ? taxableBase
+                                : max;
+
+                BigDecimal tableAmount = upperLimit.subtract(min);
+
+                if (tableAmount.compareTo(BigDecimal.ZERO) > 0) {
+                    tax = tax.add(
+                            tableAmount.multiply(rate)
+                    );
+                }
+            }
+        }
+
+        return tax.setScale(2, RoundingMode.HALF_UP);
     }
 }
