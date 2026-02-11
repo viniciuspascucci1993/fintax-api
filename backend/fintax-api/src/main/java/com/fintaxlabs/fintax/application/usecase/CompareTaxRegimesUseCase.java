@@ -25,21 +25,34 @@ public class CompareTaxRegimesUseCase {
             throw new DomainException("Tax declaration cannot be null");
         }
 
-        // Calcula SIMPLIFIED
-        TaxResult simplifiedResult =
+        // 1 - Calcular renda anual
+        BigDecimal annualIncome = declaration.getIncomes().stream()
+                .map(income -> income.getAmount().multiply(BigDecimal.valueOf(12)))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // 2 - Calcular deduções anuais
+        BigDecimal annualDeductions = declaration.getDeductions().stream()
+                .map(deduction -> deduction.getAmount().multiply(BigDecimal.valueOf(12)))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // 3 - Base tributável
+        BigDecimal taxableBase = annualIncome
+                .subtract(annualDeductions)
+                .max(BigDecimal.ZERO);
+
+        // 4 - Calcular SIMPLIFIED
+        BigDecimal simplifiedTax =
                 taxCalculatorFactory
                         .resolve(TaxRegime.SIMPLIFIED)
-                        .calculate(declaration);
+                        .calculate(taxableBase);
 
-        // Calcula COMPLETE
-        TaxResult completeResult =
+        // 5 - Calcular COMPLETE
+        BigDecimal completeTax =
                 taxCalculatorFactory
                         .resolve(TaxRegime.COMPLETE)
-                        .calculate(declaration);
+                        .calculate(taxableBase);
 
-        BigDecimal simplifiedTax = simplifiedResult.getTaxDue();
-        BigDecimal completeTax = completeResult.getTaxDue();
-
+        // 6 - Melhor opção
         TaxRegime bestOption =
                 simplifiedTax.compareTo(completeTax) <= 0
                         ? TaxRegime.SIMPLIFIED
@@ -48,7 +61,27 @@ public class CompareTaxRegimesUseCase {
         BigDecimal difference =
                 simplifiedTax.subtract(completeTax).abs();
 
-        // criar o result = diferença
+        // 7 - Criar TaxResult para cada regime
+        TaxResult simplifiedResult = new TaxResult(
+                declaration.getId(),
+                TaxRegime.SIMPLIFIED,
+                annualIncome,
+                annualDeductions,
+                taxableBase,
+                simplifiedTax,
+                BigDecimal.ZERO
+        );
+
+        TaxResult completeResult = new TaxResult(
+                declaration.getId(),
+                TaxRegime.COMPLETE,
+                annualIncome,
+                annualDeductions,
+                taxableBase,
+                completeTax,
+                BigDecimal.ZERO
+        );
+
         Map<TaxRegime, TaxResult> results = new EnumMap<>(TaxRegime.class);
         results.put(TaxRegime.SIMPLIFIED, simplifiedResult);
         results.put(TaxRegime.COMPLETE, completeResult);
@@ -57,7 +90,6 @@ public class CompareTaxRegimesUseCase {
                 bestOption,
                 difference,
                 results
-
         );
     }
 }

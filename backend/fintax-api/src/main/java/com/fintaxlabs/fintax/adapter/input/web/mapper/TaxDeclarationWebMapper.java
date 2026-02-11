@@ -38,7 +38,7 @@ public class TaxDeclarationWebMapper {
         TaxpayerResponseDTO dto = new TaxpayerResponseDTO();
         dto.setFullName(taxpayer.getFullName());
         dto.setTaxId(taxpayer.getTaxId());
-        dto.setBirthDate(taxpayer.getBirthDate().toString());
+        dto.setBirthDate(taxpayer.getBirthDate());
         dto.setHasDependents(taxpayer.getHasDependents());
         return dto;
     }

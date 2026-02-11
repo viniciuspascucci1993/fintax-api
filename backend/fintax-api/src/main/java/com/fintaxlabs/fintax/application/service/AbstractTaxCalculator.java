@@ -6,10 +6,17 @@ import com.fintaxlabs.fintax.domain.model.Income;
 import com.fintaxlabs.fintax.domain.model.TaxDeclaration;
 import com.fintaxlabs.fintax.domain.model.TaxResult;
 import com.fintaxlabs.fintax.domain.service.TaxCalculator;
+import com.fintaxlabs.fintax.domain.taxrule.TaxTable;
 
 import java.math.BigDecimal;
 
 public abstract class AbstractTaxCalculator implements TaxCalculator {
+
+    private final TaxTable taxTable;
+
+    public AbstractTaxCalculator(TaxTable taxTable) {
+        this.taxTable = taxTable;
+    }
 
     @Override
     public TaxResult calculate(TaxDeclaration declaration) {
@@ -23,7 +30,7 @@ public abstract class AbstractTaxCalculator implements TaxCalculator {
             throw new DomainException("Taxable base cannot be negative");
         }
 
-        BigDecimal taxDue = calculateTax(taxableBase);
+        BigDecimal taxDue = taxTable.calculate(taxableBase);
 
         return new TaxResult(
                 declaration.getId(),
@@ -56,6 +63,4 @@ public abstract class AbstractTaxCalculator implements TaxCalculator {
                 .map(Deduction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-
-    protected abstract BigDecimal calculateTax(BigDecimal taxableBase);
 }

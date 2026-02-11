@@ -2,9 +2,9 @@ package com.fintaxlabs.fintax.application.service;
 
 import com.fintaxlabs.fintax.domain.taxrule.TaxTable;
 
-public class CompleteTaxCalculator extends AbstractTaxCalculator{
+public class SimplifiedTaxCalculato extends AbstractTaxCalculator{
 
-    public CompleteTaxCalculator(TaxTable taxTable) {
+    public SimplifiedTaxCalculato(TaxTable taxTable) {
         super(taxTable);
     }
 }

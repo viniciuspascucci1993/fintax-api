@@ -1,0 +1,70 @@
+package com.fintaxlabs.fintax.application.usecase;
+
+import com.fintaxlabs.fintax.domain.enums.TaxAssessmentStatus;
+import com.fintaxlabs.fintax.domain.model.TaxAssessment;
+import com.fintaxlabs.fintax.domain.model.TaxAssessmentDeclaration;
+import com.fintaxlabs.fintax.domain.model.TaxAssessmentSummary;
+import com.fintaxlabs.fintax.domain.model.factory.TaxTableFactory;
+import com.fintaxlabs.fintax.domain.model.factory.impl.TaxTableFactoryImpl;
+import com.fintaxlabs.fintax.domain.taxrule.TaxTable;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static com.fintaxlabs.fintax.application.messages.TaxAssessmentMessageBuilder.buildMessages;
+import static com.fintaxlabs.fintax.shared.util.AnnualCalculations.calculateAnnualDeduction;
+import static com.fintaxlabs.fintax.shared.util.AnnualCalculations.calculateAnnualIncome;
+
+public class TaxIrPfAssessmentUseCase {
+
+    private final TaxTableFactory taxTableFactory;
+
+    public TaxIrPfAssessmentUseCase(TaxTableFactory taxTableFactory) {
+        this.taxTableFactory = taxTableFactory;
+    }
+
+    public TaxAssessment execute(TaxAssessmentDeclaration declaration) {
+
+        // 1 -ano fiscal
+        int fiscalYear = declaration.getFiscalYear();
+
+        // 2 - Normalizar rendas (mensal → anual)
+        BigDecimal annualIncome = calculateAnnualIncome(declaration);
+
+        // 3 - Normalizar deduções
+        BigDecimal annualDeductions = calculateAnnualDeduction(declaration);
+
+        // 4 - Base Tributável
+        BigDecimal taxableBase = annualIncome.subtract(annualDeductions)
+                .max(BigDecimal.ZERO);
+
+        // 5 - Selecionar Tabela
+        TaxTable taxTable  = taxTableFactory.forYear(fiscalYear, declaration.getRegime());
+
+        // 6. Calcular imposto
+        BigDecimal taxDue = taxTable.calculate(taxableBase);
+
+        // 7. Status
+        TaxAssessmentStatus status =
+                taxDue.compareTo(BigDecimal.ZERO) == 0
+                        ? TaxAssessmentStatus.EXEMPT
+                        : TaxAssessmentStatus.TAX_DUE;
+
+        // 8 - Messages
+        List<String> messages = buildMessages(status, fiscalYear);
+
+        // 9. Retorno
+        return new TaxAssessment(
+                fiscalYear,
+                declaration.getTaxpayer(),
+                new TaxAssessmentSummary(
+                        annualIncome,
+                        annualDeductions,
+                        taxableBase,
+                        taxDue,
+                        status
+                ),
+                messages
+        );
+    }
+}

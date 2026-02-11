@@ -1,19 +1,20 @@
 package com.fintaxlabs.fintax.application.resolver;
 
-import com.fintaxlabs.fintax.application.service.CompleteTaxCalculator;
-import com.fintaxlabs.fintax.application.service.SimplifiedTaxCalculator;
+import com.fintaxlabs.fintax.application.service.TaxTable2026CompleteService;
+import com.fintaxlabs.fintax.application.service.TaxTable2026SimplifiedService;
 import com.fintaxlabs.fintax.domain.enums.TaxRegime;
 import com.fintaxlabs.fintax.domain.exception.DomainException;
 import com.fintaxlabs.fintax.domain.service.TaxCalculator;
+import com.fintaxlabs.fintax.domain.taxrule.TaxTable;
 
 import java.util.Map;
 
 public class TaxCalculatorFactory {
 
-    private final Map<TaxRegime, TaxCalculator> calculators;
+    private final Map<TaxRegime, TaxTable> calculators;
     public TaxCalculatorFactory(
-            SimplifiedTaxCalculator simplified,
-            CompleteTaxCalculator complete
+            TaxTable2026SimplifiedService simplified,
+            TaxTable2026CompleteService complete
     ) {
         this.calculators = Map.of(
                 TaxRegime.SIMPLIFIED, simplified,
@@ -21,8 +22,8 @@ public class TaxCalculatorFactory {
         );
     }
 
-    public TaxCalculator resolve(TaxRegime regime) {
-        TaxCalculator calculator = calculators.get(regime);
+    public TaxTable resolve(TaxRegime regime) {
+        TaxTable calculator = calculators.get(regime);
 
         if (calculator == null) {
             throw new DomainException("No calculator for regime: " + regime);
