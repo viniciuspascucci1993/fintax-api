@@ -1,11 +1,11 @@
 package com.fintaxlabs.fintax.application.usecase;
 
 import com.fintaxlabs.fintax.domain.enums.TaxAssessmentStatus;
+import com.fintaxlabs.fintax.domain.enums.TaxRegime;
 import com.fintaxlabs.fintax.domain.model.TaxAssessment;
 import com.fintaxlabs.fintax.domain.model.TaxAssessmentDeclaration;
 import com.fintaxlabs.fintax.domain.model.TaxAssessmentSummary;
 import com.fintaxlabs.fintax.domain.model.factory.TaxTableFactory;
-import com.fintaxlabs.fintax.domain.model.factory.impl.TaxTableFactoryImpl;
 import com.fintaxlabs.fintax.domain.taxrule.TaxTable;
 
 import java.math.BigDecimal;
@@ -19,11 +19,19 @@ public class TaxIrPfAssessmentUseCase {
 
     private final TaxTableFactory taxTableFactory;
 
+    private static final BigDecimal SIMPLIFIED_LIMIT =
+            new BigDecimal("16754.34");
+
+    private static final BigDecimal SIMPLIFIED_DISCOUNT =
+            new BigDecimal("0.20");
+
     public TaxIrPfAssessmentUseCase(TaxTableFactory taxTableFactory) {
         this.taxTableFactory = taxTableFactory;
     }
 
     public TaxAssessment execute(TaxAssessmentDeclaration declaration) {
+
+        BigDecimal taxableBase;
 
         // 1 -ano fiscal
         int fiscalYear = declaration.getFiscalYear();
@@ -35,8 +43,22 @@ public class TaxIrPfAssessmentUseCase {
         BigDecimal annualDeductions = calculateAnnualDeduction(declaration);
 
         // 4 - Base Tributável
-        BigDecimal taxableBase = annualIncome.subtract(annualDeductions)
-                .max(BigDecimal.ZERO);
+        if (declaration.getRegime() == TaxRegime.SIMPLIFIED) {
+
+            // Desconto simplificado: 20% limitado
+            BigDecimal simplifiedDiscount =
+                    annualIncome.multiply(SIMPLIFIED_DISCOUNT);
+
+            simplifiedDiscount = simplifiedDiscount.min(SIMPLIFIED_LIMIT);
+
+            taxableBase = annualIncome.subtract(simplifiedDiscount);
+
+        } else {
+
+            taxableBase = annualIncome.subtract(annualDeductions);
+        }
+
+        taxableBase = taxableBase.max(BigDecimal.ZERO);
 
         // 5 - Selecionar Tabela
         TaxTable taxTable  = taxTableFactory.forYear(fiscalYear, declaration.getRegime());
