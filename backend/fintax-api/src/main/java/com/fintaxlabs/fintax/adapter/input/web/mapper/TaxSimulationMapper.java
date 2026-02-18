@@ -8,6 +8,7 @@ import com.fintaxlabs.fintax.domain.enums.TaxRegime;
 import com.fintaxlabs.fintax.domain.exception.DomainException;
 import com.fintaxlabs.fintax.domain.model.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,7 +26,9 @@ public class TaxSimulationMapper {
         );
 
         List<Income> incomes = simulateTaxRequestDTO.getIncomes().stream()
-                .map(i -> new Income(i.getAmount(), IncomeType.valueOf(i.getType())))
+                .map(i -> new Income(i.getAmount(),
+                        i.getTaxWithheld() != null ? i.getTaxWithheld() : BigDecimal.ZERO,
+                        IncomeType.valueOf(i.getType())))
                 .toList();
 
         List<Deduction> deductions = simulateTaxRequestDTO.getDeductions().stream()
@@ -111,6 +114,7 @@ public class TaxSimulationMapper {
                     try {
                         return new Income(
                                 incomeRequestDTO.getAmount(),
+                                incomeRequestDTO.getTaxWithheld() != null ? incomeRequestDTO.getTaxWithheld() : BigDecimal.ZERO,
                                 IncomeType.valueOf(incomeRequestDTO.getType())
                         );
 

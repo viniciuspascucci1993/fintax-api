@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 public class IncomeEmbeddable {
 
     private BigDecimal amount;
+    private BigDecimal taxWithheld;
 
     @Enumerated(EnumType.STRING)
     private IncomeType type;
@@ -18,8 +19,9 @@ public class IncomeEmbeddable {
     public IncomeEmbeddable() {
     }
 
-    public IncomeEmbeddable(BigDecimal amount, IncomeType type) {
+    public IncomeEmbeddable(BigDecimal amount, BigDecimal taxWithheld, IncomeType type) {
         this.amount = amount;
+        this.taxWithheld = taxWithheld;
         this.type = type;
     }
 
@@ -29,6 +31,14 @@ public class IncomeEmbeddable {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public BigDecimal getTaxWithheld() {
+        return taxWithheld;
+    }
+
+    public void setTaxWithheld(BigDecimal taxWithheld) {
+        this.taxWithheld = taxWithheld;
     }
 
     public IncomeType getType() {

@@ -12,6 +12,7 @@ import com.fintaxlabs.fintax.domain.model.Income;
 import com.fintaxlabs.fintax.domain.model.TaxDeclaration;
 import com.fintaxlabs.fintax.domain.model.Taxpayer;
 
+import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 public class TaxDeclarationEntityMapper {
@@ -92,7 +93,7 @@ public class TaxDeclarationEntityMapper {
 
         IncomeEmbeddable embeddable = new IncomeEmbeddable();
         embeddable.setAmount(domain.getAmount());
-        embeddable.setType(domain.getTypeIncome());
+        embeddable.setType(domain.getType());
 
         return embeddable;
     }
@@ -100,6 +101,7 @@ public class TaxDeclarationEntityMapper {
     private Income toIncomeDomain(IncomeEmbeddable embeddable) {
         return new Income(
                 embeddable.getAmount(),
+                embeddable.getTaxWithheld() != null ? embeddable.getTaxWithheld() : BigDecimal.ZERO,
                 IncomeType.valueOf(embeddable.getType().name())
         );
     }

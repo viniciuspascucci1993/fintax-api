@@ -45,7 +45,7 @@ public class TaxDeclarationWebMapper {
 
     private static IncomeResponseDTO toIncome(Income income) {
         IncomeResponseDTO dto = new IncomeResponseDTO();
-        dto.setType(income.getTypeIncome().name());
+        dto.setType(income.getType().name());
         dto.setAmount(income.getAmount().toPlainString());
         return dto;
     }

@@ -8,6 +8,7 @@ import com.fintaxlabs.fintax.domain.enums.DeductionType;
 import com.fintaxlabs.fintax.domain.enums.IncomeType;
 import com.fintaxlabs.fintax.domain.model.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class TaxAssessmentDeclarationMapper {
@@ -37,7 +38,10 @@ public class TaxAssessmentDeclarationMapper {
 
     private static List<Income> mapIncomes(List<IncomeRequestDTO> incomes) {
         return incomes.stream()
-                .map(i -> new Income(i.getAmount(), IncomeType.valueOf(i.getType())))
+                .map(i -> new Income(i.getAmount(),
+                        i.getTaxWithheld() != null ? i.getTaxWithheld() : BigDecimal.ZERO,
+                        IncomeType.valueOf(i.getType())
+                ))
                 .toList();
     }
 

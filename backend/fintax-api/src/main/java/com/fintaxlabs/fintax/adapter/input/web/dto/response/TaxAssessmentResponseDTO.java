@@ -1,6 +1,5 @@
 package com.fintaxlabs.fintax.adapter.input.web.dto.response;
 
-import com.fintaxlabs.fintax.adapter.input.web.dto.request.TaxpayerRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

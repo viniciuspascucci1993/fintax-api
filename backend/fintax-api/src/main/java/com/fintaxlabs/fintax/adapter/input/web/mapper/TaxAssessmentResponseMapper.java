@@ -33,6 +33,12 @@ public class TaxAssessmentResponseMapper {
                 summary.getAnnualDeductions(),
                 summary.getTaxableBase(),
                 summary.getTaxDue(),
+                summary.getTotalTaxWithheld(),
+                summary.getAmountToPay(),
+                summary.getRefund(),
+                summary.getMonthlyTaxDue(),
+                summary.isDarfRequired(),
+                summary.getInstallmentValue(),
                 summary.getStatus()
         );
     }

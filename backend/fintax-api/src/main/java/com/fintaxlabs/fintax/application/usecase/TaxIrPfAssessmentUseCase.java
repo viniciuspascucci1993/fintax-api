@@ -9,6 +9,7 @@ import com.fintaxlabs.fintax.domain.model.factory.TaxTableFactory;
 import com.fintaxlabs.fintax.domain.taxrule.TaxTable;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static com.fintaxlabs.fintax.application.messages.TaxAssessmentMessageBuilder.buildMessages;
@@ -66,11 +67,39 @@ public class TaxIrPfAssessmentUseCase {
         // 6. Calcular imposto
         BigDecimal taxDue = taxTable.calculate(taxableBase);
 
-        // 7. Status
-        TaxAssessmentStatus status =
-                taxDue.compareTo(BigDecimal.ZERO) == 0
-                        ? TaxAssessmentStatus.EXEMPT
-                        : TaxAssessmentStatus.TAX_DUE;
+        // 7 - Calcular total retido no ano
+        BigDecimal totalTaxWithHeld = declaration.getIncomes().stream()
+                .map(income -> income.getTaxWithheld()
+                        .multiply(BigDecimal.valueOf(12)))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // 8 - Valor mensal equivalente
+        BigDecimal monthlyTaxDue = taxDue
+                .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+
+        // 9 - Comparar retido vs devido
+        BigDecimal refund = BigDecimal.ZERO;
+        BigDecimal amountToPay = BigDecimal.ZERO;
+
+        if (totalTaxWithHeld.compareTo(taxDue) > 0) {
+            refund = totalTaxWithHeld.subtract(taxDue);
+        } else {
+            amountToPay = taxDue.subtract(totalTaxWithHeld);
+        }
+
+        boolean darfRequired = amountToPay.compareTo(BigDecimal.ZERO) > 0;
+        BigDecimal installmentValue = calculateInstallmentValue(amountToPay);
+
+        // Status
+        TaxAssessmentStatus status;
+
+        if (taxDue.compareTo(BigDecimal.ZERO) == 0) {
+            status = TaxAssessmentStatus.EXEMPT;
+        } else if (refund.compareTo(BigDecimal.ZERO) > 0) {
+            status = TaxAssessmentStatus.TAX_REFUND;
+        } else {
+            status = TaxAssessmentStatus.TAX_DUE;
+        }
 
         // 8 - Messages
         List<String> messages = buildMessages(status, fiscalYear);
@@ -84,9 +113,34 @@ public class TaxIrPfAssessmentUseCase {
                         annualDeductions,
                         taxableBase,
                         taxDue,
+                        totalTaxWithHeld,
+                        amountToPay,
+                        refund,
+                        monthlyTaxDue,
+                        darfRequired,
+                        installmentValue,
                         status
                 ),
                 messages
         );
+    }
+
+    private static BigDecimal calculateInstallmentValue(BigDecimal amountToPay) {
+
+        if (amountToPay.compareTo(BigDecimal.ZERO) <= 0) {
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal minimumInstallment = new BigDecimal("50.00");
+        int maxInstallments = 8;
+
+        BigDecimal tentativeInstallment =
+                amountToPay.divide(BigDecimal.valueOf(maxInstallments), 2, RoundingMode.HALF_UP);
+
+        if (tentativeInstallment.compareTo(minimumInstallment) >= 0) {
+            return tentativeInstallment;
+        }
+
+        return amountToPay.setScale(2, RoundingMode.HALF_UP);
     }
 }

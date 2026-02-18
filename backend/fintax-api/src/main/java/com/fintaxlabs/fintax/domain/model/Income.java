@@ -7,10 +7,12 @@ import java.math.BigDecimal;
 public class Income {
 
     private BigDecimal amount;
+    private BigDecimal taxWithheld;   // IR mensal retido
     private IncomeType type;
 
-    public Income(BigDecimal amount, IncomeType type) {
+    public Income(BigDecimal amount, BigDecimal taxWithheld, IncomeType type) {
         this.amount = amount;
+        this.taxWithheld = taxWithheld;
         this.type = type;
     }
 
@@ -22,11 +24,19 @@ public class Income {
         this.amount = amount;
     }
 
-    public IncomeType getTypeIncome() {
+    public BigDecimal getTaxWithheld() {
+        return taxWithheld;
+    }
+
+    public void setTaxWithheld(BigDecimal taxWithheld) {
+        this.taxWithheld = taxWithheld;
+    }
+
+    public IncomeType getType() {
         return type;
     }
 
-    public void setTypeIncome(IncomeType typeIncome) {
-        this.type = typeIncome;
+    public void setType(IncomeType type) {
+        this.type = type;
     }
 }

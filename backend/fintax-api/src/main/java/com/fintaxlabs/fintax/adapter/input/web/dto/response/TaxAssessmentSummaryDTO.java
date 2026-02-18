@@ -16,5 +16,14 @@ public class TaxAssessmentSummaryDTO {
     private BigDecimal annualDeductions;
     private BigDecimal taxableBase;
     private BigDecimal taxDue;
+
+    private BigDecimal totalTaxWithheld;
+    private BigDecimal amountToPay;
+    private BigDecimal refund;
+    private BigDecimal monthlyTaxDue;
+
+    private boolean darfRequired;
+    private BigDecimal installmentValue;
+
     private TaxAssessmentStatus status;
 }

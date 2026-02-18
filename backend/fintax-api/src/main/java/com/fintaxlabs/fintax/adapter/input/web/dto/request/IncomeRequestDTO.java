@@ -12,5 +12,6 @@ import java.math.BigDecimal;
 public class IncomeRequestDTO {
 
     private BigDecimal amount;
+    private BigDecimal taxWithheld;
     private String type;
 }
